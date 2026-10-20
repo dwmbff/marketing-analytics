@@ -1,0 +1,54 @@
+{
+  "n_customers": 2226,
+  "H1_children_vs_response": {
+    "response_rate_with_children_pct": 10.3,
+    "response_rate_without_children_pct": 26.6,
+    "diff_pp_ci95": [
+      -20.1,
+      -12.6
+    ],
+    "chi2": 93.9,
+    "p_value": 3.37029427569664e-22,
+    "cramers_v": 0.207
+  },
+  "H2_partner_vs_income": {
+    "median_income_partner": 51606.5,
+    "median_income_no_partner": 50757.0,
+    "mean_income_partner": 51842,
+    "mean_income_no_partner": 52113,
+    "rank_biserial": -0.011,
+    "mannwhitney_p_value": 0.6619879063133812
+  },
+  "H3_income_vs_spend": {
+    "spearman_rho": 0.857,
+    "p_value": 0.0,
+    "n": 2202
+  },
+  "H4_rfm_vs_response": {
+    "chi2": 129.5,
+    "p_value": 3.110803629001344e-26,
+    "cramers_v": 0.241
+  },
+  "sensitivity_without_suspected_duplicates": {
+    "n_customers": 2044,
+    "H1": {
+      "response_rate_with_children_pct": 10.4,
+      "response_rate_without_children_pct": 27.7,
+      "diff_pp_ci95": [
+        -21.3,
+        -13.3
+      ],
+      "chi2": 94.5,
+      "p_value": 2.501344710648488e-22,
+      "cramers_v": 0.216
+    },
+    "H2": {
+      "median_income_partner": 52032.5,
+      "median_income_no_partner": 50954.5,
+      "mean_income_partner": 51951,
+      "mean_income_no_partner": 52146,
+      "rank_biserial": -0.01,
+      "mannwhitney_p_value": 0.7195158705926528
+    }
+  }
+}

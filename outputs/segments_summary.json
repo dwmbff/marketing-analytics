@@ -1,0 +1,86 @@
+{
+  "source": "marketing_campaign.csv",
+  "customers_in_mart": 2226,
+  "rfm_segments": [
+    {
+      "rfm_segment": "1. Champions",
+      "customers": 304,
+      "avg_spend": "1239",
+      "revenue_share_pct": "27.9",
+      "response_rate_pct": "31.9"
+    },
+    {
+      "rfm_segment": "2. Loyal",
+      "customers": 467,
+      "avg_spend": "1271",
+      "revenue_share_pct": "43.9",
+      "response_rate_pct": "16.5"
+    },
+    {
+      "rfm_segment": "3. Recent / potential",
+      "customers": 586,
+      "avg_spend": "256",
+      "revenue_share_pct": "11.1",
+      "response_rate_pct": "17.7"
+    },
+    {
+      "rfm_segment": "4. At risk",
+      "customers": 237,
+      "avg_spend": "569",
+      "revenue_share_pct": "10.0",
+      "response_rate_pct": "8.0"
+    },
+    {
+      "rfm_segment": "5. Hibernating",
+      "customers": 338,
+      "avg_spend": "69",
+      "revenue_share_pct": "1.7",
+      "response_rate_pct": "3.3"
+    },
+    {
+      "rfm_segment": "6. Regular",
+      "customers": 294,
+      "avg_spend": "249",
+      "revenue_share_pct": "5.4",
+      "response_rate_pct": "8.2"
+    }
+  ],
+  "campaign_acceptance": [
+    {
+      "campaign": "cmp1",
+      "customers_offered": 2226,
+      "accepted": 143,
+      "acceptance_rate_pct": "6.42"
+    },
+    {
+      "campaign": "cmp2",
+      "customers_offered": 2226,
+      "accepted": 30,
+      "acceptance_rate_pct": "1.35"
+    },
+    {
+      "campaign": "cmp3",
+      "customers_offered": 2226,
+      "accepted": 163,
+      "acceptance_rate_pct": "7.32"
+    },
+    {
+      "campaign": "cmp4",
+      "customers_offered": 2226,
+      "accepted": 167,
+      "acceptance_rate_pct": "7.50"
+    },
+    {
+      "campaign": "cmp5",
+      "customers_offered": 2226,
+      "accepted": 161,
+      "acceptance_rate_pct": "7.23"
+    },
+    {
+      "campaign": "last",
+      "customers_offered": 2226,
+      "accepted": 332,
+      "acceptance_rate_pct": "14.91"
+    }
+  ]
+}
