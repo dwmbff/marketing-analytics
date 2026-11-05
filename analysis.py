@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from scipy import stats
+from scipy.optimize import brentq
 
 BLUE, ORANGE, GREY = "#2f6db5", "#e07b39", "#8c8c8c"
 sns.set_theme(style="whitegrid", font="DejaVu Sans")
@@ -26,6 +27,48 @@ def diff_ci(p1, n1, p2, n2):
     se = np.sqrt(p1 * (1 - p1) / n1 + p2 * (1 - p2) / n2)
     d = p1 - p2
     return d - 1.96 * se, d + 1.96 * se
+
+
+def cohen_h(p1, p0):
+    return 2 * np.arcsin(np.sqrt(p1)) - 2 * np.arcsin(np.sqrt(p0))
+
+
+def sample_size_per_group(p0, p1, alpha=0.05, power=0.8):
+    h = abs(cohen_h(p1, p0))
+    z = stats.norm.ppf(1 - alpha / 2) + stats.norm.ppf(power)
+    return int(np.ceil(2 * (z / h) ** 2))
+
+
+def power_two_proportions(p0, p1, n, alpha=0.05):
+    h = abs(cohen_h(p1, p0))
+    return float(stats.norm.cdf(h * np.sqrt(n / 2) - stats.norm.ppf(1 - alpha / 2)))
+
+
+def min_detectable_rate(p0, n, alpha=0.05, power=0.8):
+    return float(brentq(lambda p1: power_two_proportions(p0, p1, n, alpha) - power, p0 + 1e-6, 0.999))
+
+
+def loyal_power_analysis(df, alpha=0.05, power=0.8):
+    loyal = df[df["rfm_segment"] == "2. Loyal"]
+    p0 = float(loyal["response"].mean())
+    n_group = len(loyal) // 2
+    lifts = [0.03, 0.05, 0.075, 0.10, 0.15]
+    return {
+        "segment_size": len(loyal),
+        "baseline_response_pct": round(100 * p0, 1),
+        "alpha": alpha,
+        "target_power": power,
+        "n_per_group_available": n_group,
+        "min_detectable_response_pct": round(100 * min_detectable_rate(p0, n_group, alpha, power), 1),
+        "scenarios": [
+            {
+                "lift_pp": round(100 * d, 1),
+                "n_per_group_required": sample_size_per_group(p0, p0 + d, alpha, power),
+                "power_with_available_n_pct": round(100 * power_two_proportions(p0, p0 + d, n_group, alpha), 1),
+            }
+            for d in lifts
+        ],
+    }
 
 
 def test_children_response(df):
@@ -79,6 +122,7 @@ def run(mart, rfm, out: Path):
         "H1": test_children_response(nd),
         "H2": test_partner_income(nd),
     }
+    results["loyal_ab_power"] = loyal_power_analysis(df)
     (out / "stats_results.json").write_text(json.dumps(results, ensure_ascii=False, indent=2), encoding="utf-8")
 
     charts = out / "charts"
@@ -143,4 +187,19 @@ def run(mart, rfm, out: Path):
     ax.set_title(f"Последняя кампания принята лучше предыдущих: {camp.set_index('campaign').loc['last', 'acceptance_rate_pct']:.1f}%",
                  fontsize=11, loc="left")
     fig.tight_layout(); fig.savefig(charts / "05_campaign_acceptance.png"); plt.close(fig)
+
+    pw = results["loyal_ab_power"]
+    p0 = pw["baseline_response_pct"] / 100
+    lifts = np.linspace(0.03, 0.15, 60)
+    need = [sample_size_per_group(p0, p0 + d) for d in lifts]
+    fig, ax = plt.subplots(figsize=(8, 4.8))
+    ax.plot(100 * lifts, need, color=BLUE, lw=2)
+    ax.axhline(pw["n_per_group_available"], color=ORANGE, ls="--")
+    ax.text(15, pw["n_per_group_available"] + 25, f"доступно в сегменте: {pw['n_per_group_available']} на группу",
+            ha="right", color=ORANGE, fontsize=9)
+    ax.set_xlabel("Ожидаемый прирост отклика, п.п.")
+    ax.set_ylabel("Нужно клиентов на группу")
+    ax.set_title(f"A/B-тест в сегменте Loyal заметит рост отклика с {pw['baseline_response_pct']}% "
+                 f"до {pw['min_detectable_response_pct']}% и выше", fontsize=11, loc="left")
+    fig.tight_layout(); fig.savefig(charts / "06_loyal_power.png"); plt.close(fig)
 

@@ -50,5 +50,40 @@
       "rank_biserial": -0.01,
       "mannwhitney_p_value": 0.7195158705926528
     }
+  },
+  "loyal_ab_power": {
+    "segment_size": 467,
+    "baseline_response_pct": 16.5,
+    "alpha": 0.05,
+    "target_power": 0.8,
+    "n_per_group_available": 233,
+    "min_detectable_response_pct": 27.1,
+    "scenarios": [
+      {
+        "lift_pp": 3.0,
+        "n_per_group_required": 2570,
+        "power_with_available_n_pct": 13.2
+      },
+      {
+        "lift_pp": 5.0,
+        "n_per_group_required": 963,
+        "power_with_available_n_pct": 28.1
+      },
+      {
+        "lift_pp": 7.5,
+        "n_per_group_required": 447,
+        "power_with_available_n_pct": 52.5
+      },
+      {
+        "lift_pp": 10.0,
+        "n_per_group_required": 262,
+        "power_with_available_n_pct": 75.3
+      },
+      {
+        "lift_pp": 15.0,
+        "n_per_group_required": 125,
+        "power_with_available_n_pct": 97.0
+      }
+    ]
   }
 }
