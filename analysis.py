@@ -48,6 +48,13 @@ def min_detectable_rate(p0, n, alpha=0.05, power=0.8):
     return float(brentq(lambda p1: power_two_proportions(p0, p1, n, alpha) - power, p0 + 1e-6, 0.999))
 
 
+def weeks_to_collect(n_total, weekly_audience):
+    return int(np.ceil(n_total / weekly_audience))
+
+
+WEEKLY_AUDIENCE_SCENARIOS = (25, 50, 100, 200)
+
+
 def loyal_power_analysis(df, alpha=0.05, power=0.8):
     loyal = df[df["rfm_segment"] == "2. Loyal"]
     p0 = float(loyal["response"].mean())
@@ -64,6 +71,10 @@ def loyal_power_analysis(df, alpha=0.05, power=0.8):
             {
                 "lift_pp": round(100 * d, 1),
                 "n_per_group_required": sample_size_per_group(p0, p0 + d, alpha, power),
+                "weeks_to_collect": {
+                    str(w): weeks_to_collect(2 * sample_size_per_group(p0, p0 + d, alpha, power), w)
+                    for w in WEEKLY_AUDIENCE_SCENARIOS
+                },
                 "power_with_available_n_pct": round(100 * power_two_proportions(p0, p0 + d, n_group, alpha), 1),
             }
             for d in lifts
